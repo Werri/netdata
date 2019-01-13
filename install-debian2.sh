@@ -25,5 +25,10 @@ echo -e "debian\ndebian\n" | passwd debian
 adduser debian sudo
 echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux /vmlinuz root=/dev/disk/by-label/DEBUSB quiet\n    initrd /initrd.img\n}\n\n\n' >> /etc/grub.d/40_custom
 update-grub
+source add.sh
 exit
 EOF
+sudo umount /mnt/debian/{dev,sys,proc}
+sudo umount /mnt/debian
+sudo losetup -d ${LO_DEVICE}
+
