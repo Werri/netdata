@@ -46,6 +46,11 @@ adduser debian sudo
 echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux /vmlinuz root=/dev/disk/by-label/DEBUSB quiet\n    initrd /initrd.img\n}\n\n\n' >> /etc/grub.d/40_custom
 update-grub
 apt-get install --no-install-recommends --force-yes --yes parted
+echo -e "#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/" > /chrootme.sh
+chmod 755 /chrootme.sh
+chown root:root /chrootme.sh
+echo "LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1" > /etc/fstab
+#echo "proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0" >> /etc/fstab
 echo ${CF_FILE1} | awk '{system($0)}'
 exit
 EOF
