@@ -13,9 +13,9 @@ sudo debootstrap --arch=i386 --variant=minbase stretch /mnt/debian http://ftp.us
 sudo mount -t proc /proc /mnt/debian/proc
 sudo mount -t sysfs /sys /mnt/debian/sys
 sudo mount -o bind /dev /mnt/debian/dev
-sudo chroot /mnt/debian
-apt-get update && echo -e "1\n" | apt-get install --no-install-recommends --force-yes --yes linux-image-586 systemd-sysv grub2-common grub-pc
-echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
+cat << EOF | sudo chroot /mnt/debian
+apt-get update
+echo -e "1\n" | apt-get install --no-install-recommends --force-yes --yes linux-image-586 systemd-sysv grub2-common grub-pc && echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
 grub-install --target=i386-pc --boot-directory=/boot --force-file-id --skip-fs-probe --recheck ${LO_DEVICE}
 #Your Configuration
 apt-get install --no-install-recommends --force-yes --yes sudo nano vim git perl openssh-server openssh-client ncftp network-manager
@@ -26,3 +26,4 @@ adduser debian sudo
 echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux /vmlinuz root=/dev/disk/by-label/DEBUSB quiet\n    initrd /initrd.img\n}\n\n\n' >> /etc/grub.d/40_custom
 update-grub
 exit
+EOF
