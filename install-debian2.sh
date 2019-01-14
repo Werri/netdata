@@ -44,11 +44,17 @@ adduser --quiet --system --group --disabled-password --shell /bin/bash --home /h
 echo -e "debian\ndebian\n" | passwd debian
 adduser debian sudo
 echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux /vmlinuz root=/dev/disk/by-label/DEBUSB quiet\n    initrd /initrd.img\n}\n\n\n' >> /etc/grub.d/40_custom
+GRUB_DISABLE_LINUX_UUID=true >> /etc/default/grub
+GRUB_ENABLE_LINUX_LABEL=true >> /etc/default/grub
 update-grub
 apt-get install --no-install-recommends --force-yes --yes parted
+e2label ${LO_DEVICE} DEBUSB
 echo -e "#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/" > /chrootme.sh
+echo -e "#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n" > /unchrootme.sh
 chmod 755 /chrootme.sh
 chown root:root /chrootme.sh
+chmod 755 /unchrootme.sh
+chown root:root /unchrootme.sh
 echo "LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1" > /etc/fstab
 #echo "proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0" >> /etc/fstab
 echo ${CF_FILE1} | awk '{system($0)}'
@@ -57,3 +63,8 @@ EOF
 sudo umount /mnt/debian/{dev,sys,proc}
 sudo umount /mnt/debian
 sudo losetup -d ${LO_DEVICE}
+if [ $# -gt 0 ]; then
+   dd if=/dev/zero bs=1MiB of=${LO_DEVICE} conv=notrunc oflag=append count=$1
+   resize2fs ${LO_DEVICE}
+   e2label ${LO_DEVICE} DEBUSB
+fi
