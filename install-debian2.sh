@@ -17,6 +17,7 @@ sudo mount -o bind /dev /mnt/debian/dev
 cat << EOF | sudo chroot /mnt/debian
 apt-get update
 apt-get install --no-install-recommends --force-yes --yes linux-image-586 systemd-sysv
+dd bs=512 count=1 if=/dev/sda of=./mbr_backup.img
 echo -e "1\n" | apt-get install --no-install-recommends --force-yes --yes grub2-common grub-pc
 echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
 grub-install --target=i386-pc --boot-directory=/boot --force-file-id --skip-fs-probe --recheck ${LO_DEVICE}
@@ -57,6 +58,7 @@ chmod 755 /unchrootme.sh
 chown root:root /unchrootme.sh
 echo "LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1" > /etc/fstab
 #echo "proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0" >> /etc/fstab
+dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
 echo ${CF_FILE1} | awk '{system($0)}'
 exit
 EOF
