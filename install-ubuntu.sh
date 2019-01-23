@@ -1,4 +1,5 @@
 #!/bin/bash
+apt-get update && apt-get install sudo nano --force-yes --yes
 sudo apt-get update && sudo apt-get install sudo nano --force-yes --yes
 sudo apt-get install debootstrap
 sudo fallocate -l 1G debian.img
@@ -15,8 +16,10 @@ sudo mount -t proc /proc /mnt/debian/proc
 sudo mount -t sysfs /sys /mnt/debian/sys
 sudo mount -o bind /dev /mnt/debian/dev
 sudo cat << EOF | sudo chroot /mnt/debian
+apt-get update
+apt-get install --no-install-recommends --force-yes --yes linux-image-amd64 systemd-sysv sudo
 sudo apt-get update
-sudo apt-get install --no-install-recommends --force-yes --yes linux-image-amd64 systemd-sysv
+sudo apt-get install --no-install-recommends --force-yes --yes linux-image-amd64 systemd-sysv sudo
 sudo dd bs=512 count=1 if=/dev/sda of=./mbr_backup.img
 sudo echo -e "1\n" | sudo apt-get install --no-install-recommends --force-yes --yes grub2-common grub-pc
 sudo echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
