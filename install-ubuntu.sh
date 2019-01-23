@@ -11,15 +11,13 @@ CF_FILE1=$(cat add.sh)
 mkfs.ext4 ${LO_PART1}
 mkdir -p /mnt/debian
 mount ${LO_PART1} /mnt/debian
-debootstrap --arch=amd64 --variant=minbase xenial /mnt/debian http://de.archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --variant=minbase bionic /mnt/debian http://de.archive.ubuntu.com/ubuntu
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
 mount -o bind /dev /mnt/debian/dev
 cat << EOF |  chroot /mnt/debian
 apt-get update
-apt-get install --no-install-recommends --force-yes --yes linux-image-amd64 systemd-sysv 
-apt-get update
-apt-get install --no-install-recommends --force-yes --yes linux-image-amd64 systemd-sysv 
+apt-get install --no-install-recommends --force-yes --yes linux-image-generic systemd-sysv
 dd bs=512 count=1 if=/dev/sda of=./mbr_backup.img
 echo -e "1\n" | apt-get install --no-install-recommends --force-yes --yes grub2-common grub-pc
 echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
