@@ -26,7 +26,7 @@ apt-get install --no-install-recommends --force-yes --yes initramfs-tools
 dd bs=512 count=1 if=/dev/sda of=./mbr_backup.img
 echo -e '1\n' | apt-get install --no-install-recommends --force-yes --yes grub2-common grub-pc
 echo 'LABEL=DEBUSB / ext4 defaults 0 1' > /etc/fstab
-grub-install --target=i386-pc –-root-directory=/ --boot-directory=/boot --force-file-id --skip-fs-probe --recheck ${LO_DEVICE}
+grub-install --target=i386-pc --boot-directory=/boot --force-file-id --skip-fs-probe --recheck ${LO_DEVICE}
 #Your Configuration
 echo -e '\n\n\n\n\n\n\n\n\n\n\n\n\n\n' | apt-get install --no-install-recommends --force-yes --yes locales
 locale-gen --purge de_DE.UTF-8
