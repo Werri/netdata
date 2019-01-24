@@ -15,7 +15,8 @@ debootstrap --arch=amd64 --variant=minbase xenial /mnt/debian http://de.archive.
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
 mount -o bind /dev /mnt/debian/dev
-rsync -av /lib/udev/rules.d /mnt/debian/udev/rules.d
+cp ./udevrules.tar /mnt/debian
+chmod 777 /mnt/debian/udevrules.tar
 cat << EOF |  chroot /mnt/debian
 apt-get update
 apt-get install --no-install-recommends --force-yes --yes linux-image-generic systemd-sysv
@@ -66,6 +67,8 @@ echo 'LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1
 # echo 'proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0' >> /etc/fstab
 dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
 echo ${CF_FILE1} |  awk '{system($0)}'
+cd / && tar xvf udevrules.tar
+rm udevrules.tar
 exit
 EOF
 umount /mnt/debian/{dev,sys,proc}
