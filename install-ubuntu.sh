@@ -1,6 +1,6 @@
 #!/bin/bash
 apt-get update && apt-get install  nano --force-yes --yes
-apt-get update &&  apt-get install  nano --force-yes --yes
+apt-get update &&  apt-get install  rsync --force-yes --yes
 apt-get install debootstrap
 fallocate -l 1G debian.img
 echo -e "o\nn\np\n1\n\n\nw" |  fdisk debian.img
@@ -15,6 +15,7 @@ debootstrap --arch=amd64 --variant=minbase xenial /mnt/debian http://de.archive.
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
 mount -o bind /dev /mnt/debian/dev
+rsync -av /lib/udev/rules.d /mnt/debian/udev/rules.d
 cat << EOF |  chroot /mnt/debian
 apt-get update
 apt-get install --no-install-recommends --force-yes --yes linux-image-generic systemd-sysv
