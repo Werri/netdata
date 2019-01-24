@@ -21,6 +21,7 @@ apt-get install --no-install-recommends --force-yes --yes linux-image-generic sy
 apt-get install --no-install-recommends --force-yes --yes udev
 apt-get install --no-install-recommends --force-yes --yes libblkid1
 apt-get install --no-install-recommends --force-yes --yes usbmount
+apt-get install --no-install-recommends --force-yes --yes initramfs-tools
 dd bs=512 count=1 if=/dev/sda of=./mbr_backup.img
 echo -e "1\n" | apt-get install --no-install-recommends --force-yes --yes grub2-common grub-pc
 echo "LABEL=DEBUSB / ext4 defaults 0 1" > /etc/fstab
