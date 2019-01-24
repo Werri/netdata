@@ -50,8 +50,8 @@ GRUB_ENABLE_LINUX_LABEL=true >> /etc/default/grub
 update-grub
 apt-get install --no-install-recommends --force-yes --yes parted
 e2label ${LO_DEVICE} DEBUSB
-echo -e "#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/" > /chrootme.sh
-echo -e "#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n" > /unchrootme.sh
+echo -e '#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/' > /chrootme.sh
+echo -e '#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n' > /unchrootme.sh
 chmod 755 /chrootme.sh
 chown root:root /chrootme.sh
 chmod 755 /unchrootme.sh
