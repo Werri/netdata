@@ -1,8 +1,8 @@
 #!/bin/bash
 apt-get update
-apt-get install  --force-yes --yes nano
-apt-get install  --force-yes --yes rsync
-apt-get install debootstrap
+apt-get install --force-yes --yes nano
+apt-get install --force-yes --yes rsync
+apt-get install --force-yes --yes debootstrap
 fallocate -l 1500M debian.img
 echo -e "o\nn\np\n1\n\n\nw" |  fdisk debian.img
 echo -e "a\nw\n" |  fdisk debian.img
