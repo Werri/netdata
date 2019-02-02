@@ -14,7 +14,7 @@ mount ${LO_PART1} /mnt/debian
 ln -s /usr/share/debootstrap/scripts/gutsy /usr/share/debootstrap/scripts/artful
 ln -s /usr/share/debootstrap/scripts/gutsy /usr/share/debootstrap/scripts/bionic
 ln -s /usr/share/debootstrap/scripts/gutsy /usr/share/debootstrap/scripts/cosmic
-debootstrap --arch=amd64 --variant=minbase cosmic /mnt/debian http://de.archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --variant=minbase bionic /mnt/debian http://de.archive.ubuntu.com/ubuntu
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
 mount -o bind /dev /mnt/debian/dev
@@ -69,7 +69,7 @@ chown root:root /unchrootme.sh
 echo 'LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1' > /etc/fstab
 # echo 'proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0' >> /etc/fstab
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4052245BD4284CDD
-echo "deb https://repo.iovisor.org/apt/cosmic cosmic main" | tee /etc/apt/sources.list.d/iovisor.list
+echo "deb https://repo.iovisor.org/apt/bionic bionic main" | tee /etc/apt/sources.list.d/iovisor.list
 apt-get update
 apt-get install --no-install-recommends --force-yes --yes bcc-tools libbcc-examples linux-headers-generic
 dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
