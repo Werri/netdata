@@ -11,6 +11,7 @@ CF_FILE1=$(cat add.sh)
 mkfs.ext4 ${LO_PART1}
 mkdir -p /mnt/debian
 mount ${LO_PART1} /mnt/debian
+ln -s /usr/share/debootstrap/scripts/gutsy /usr/share/debootstrap/scripts/bionic
 debootstrap --arch=amd64 --variant=minbase bionic /mnt/debian http://de.archive.ubuntu.com/ubuntu
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
@@ -57,7 +58,7 @@ echo 'GRUB_ENABLE_LINUX_LABEL=true' >> /etc/default/grub
 update-grub
 apt-get install --no-install-recommends --force-yes --yes parted
 e2label ${LO_DEVICE} DEBUSB
-e2label ${LO_DEVICE}p1 DEBUSB
+e2label ${LO_PART1} DEBUSB
 echo -e '#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/' > /chrootme.sh
 echo -e '#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n' > /unchrootme.sh
 chmod 755 /chrootme.sh
