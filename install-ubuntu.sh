@@ -1,6 +1,7 @@
 #!/bin/bash
-apt-get update && apt-get install  nano --force-yes --yes
-apt-get update &&  apt-get install  rsync --force-yes --yes
+apt-get update
+apt-get install  --force-yes --yes nano
+apt-get install  --force-yes --yes rsync
 apt-get install debootstrap
 fallocate -l 1500M debian.img
 echo -e "o\nn\np\n1\n\n\nw" |  fdisk debian.img
@@ -22,7 +23,8 @@ cp ./udevrules.tar /mnt/debian
 chmod 777 /mnt/debian/udevrules.tar
 cat << EOF |  chroot /mnt/debian
 apt-get update
-apt-get install --no-install-recommends --force-yes --yes linux-image-generic systemd-sysv
+apt-get install --no-install-recommends --force-yes --yes systemd-sysv
+apt-get install --no-install-recommends --force-yes --yes linux-image-generic
 apt-get install --no-install-recommends --force-yes --yes udev
 apt-get install --no-install-recommends --force-yes --yes libblkid1
 apt-get install --no-install-recommends --force-yes --yes usbmount
@@ -49,7 +51,16 @@ update-locale
 echo -e '\n\n\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n' | apt-get install --no-install-recommends --force-yes --yes  keyboard-configuration console-setup console-data
 localectl set-keymap --no-convert de
 loadkeys de
-apt-get install --no-install-recommends --force-yes --yes  nano vim git perl openssh-server openssh-client ncftp network-manager lsb-release
+apt-get install --no-install-recommends --force-yes --yes nano
+apt-get install --no-install-recommends --force-yes --yes vim
+apt-get install --no-install-recommends --force-yes --yes git
+apt-get install --no-install-recommends --force-yes --yes perl
+apt-get install --no-install-recommends --force-yes --yes openssh-server
+apt-get install --no-install-recommends --force-yes --yes openssh-client
+apt-get install --no-install-recommends --force-yes --yes openssh-server
+apt-get install --no-install-recommends --force-yes --yes ncftp
+apt-get install --no-install-recommends --force-yes --yes network-manager
+apt-get install --no-install-recommends --force-yes --yes lsb-release
 echo -e 'root\nroot\n' | passwd root
 adduser --quiet --system --group --disabled-password --shell /bin/bash --home /home/debian --gecos "Full name,Room number,Work phone,Home phone" debian
 echo -e 'debian\ndebian\n' | passwd debian
@@ -58,10 +69,12 @@ echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux 
 echo 'GRUB_DISABLE_LINUX_UUID=true' >> /etc/default/grub
 echo 'GRUB_ENABLE_LINUX_LABEL=true' >> /etc/default/grub
 update-grub
-apt-get install --no-install-recommends --force-yes --yes parted gnupg ca-certificates
+apt-get install --no-install-recommends --force-yes --yes parted
+apt-get install --no-install-recommends --force-yes --yes gnupg
+apt-get install --no-install-recommends --force-yes --yes ca-certificates
 e2label ${LO_PART1} DEBUSB
 echo -e '#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/' > /chrootme.sh
-echo -e '#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n' > /unchrootme.sh
+echo -e '#!/bin/bash\numount ./{dev,sys,proc}\numount .\n' > /unchrootme.sh
 chmod 755 /chrootme.sh
 chown root:root /chrootme.sh
 chmod 755 /unchrootme.sh
@@ -71,7 +84,9 @@ echo 'LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4052245BD4284CDD
 echo "deb https://repo.iovisor.org/apt/bionic bionic main" | tee /etc/apt/sources.list.d/iovisor.list
 apt-get update
-apt-get install --no-install-recommends --force-yes --yes bcc-tools libbcc-examples linux-headers-generic
+apt-get install --no-install-recommends --force-yes --yes bcc-tools
+apt-get install --no-install-recommends --force-yes --yes libbcc-examples
+apt-get install --no-install-recommends --force-yes --yes linux-headers-generic
 dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
 echo ${CF_FILE1} |  awk '{system($0)}'
 cd / && tar xvf udevrules.tar
