@@ -56,7 +56,7 @@ echo -e '\n\n\nset default="0"\nset timeout=10\nmenuentry "Debian" {\n    linux 
 echo 'GRUB_DISABLE_LINUX_UUID=true' >> /etc/default/grub
 echo 'GRUB_ENABLE_LINUX_LABEL=true' >> /etc/default/grub
 update-grub
-apt-get install --no-install-recommends --force-yes --yes parted
+apt-get install --no-install-recommends --force-yes --yes parted lpnug
 e2label ${LO_DEVICE} DEBUSB
 e2label ${LO_PART1} DEBUSB
 echo -e '#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/' > /chrootme.sh
@@ -68,9 +68,9 @@ chown root:root /unchrootme.sh
 echo 'LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1' > /etc/fstab
 # echo 'proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0' >> /etc/fstab
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4052245BD4284CDD
-echo "deb https://repo.iovisor.org/apt/$(lsb_release -cs) $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/iovisor.list
+echo "deb https://repo.iovisor.org/apt/bionic bionic main" | tee /etc/apt/sources.list.d/iovisor.list
 apt-get update
-apt-get install bcc-tools libbcc-examples linux-headers-$(uname -r)
+apt-get install bcc-tools libbcc-examples linux-headers-generic
 dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
 echo ${CF_FILE1} |  awk '{system($0)}'
 cd / && tar xvf udevrules.tar
