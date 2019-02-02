@@ -11,7 +11,7 @@ CF_FILE1=$(cat add.sh)
 mkfs.ext4 ${LO_PART1}
 mkdir -p /mnt/debian
 mount ${LO_PART1} /mnt/debian
-debootstrap --arch=amd64 --variant=minbase xenial /mnt/debian http://de.archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --variant=minbase bionic /mnt/debian http://de.archive.ubuntu.com/ubuntu
 mount -t proc /proc /mnt/debian/proc
 mount -t sysfs /sys /mnt/debian/sys
 mount -o bind /dev /mnt/debian/dev
@@ -46,7 +46,7 @@ update-locale
 echo -e '\n\n\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n2\n' | apt-get install --no-install-recommends --force-yes --yes  keyboard-configuration console-setup console-data
 localectl set-keymap --no-convert de
 loadkeys de
-apt-get install --no-install-recommends --force-yes --yes  nano vim git perl openssh-server openssh-client ncftp network-manager
+apt-get install --no-install-recommends --force-yes --yes  nano vim git perl openssh-server openssh-client ncftp network-manager lsb-release
 echo -e 'root\nroot\n' | passwd root
 adduser --quiet --system --group --disabled-password --shell /bin/bash --home /home/debian --gecos "Full name,Room number,Work phone,Home phone" debian
 echo -e 'debian\ndebian\n' | passwd debian
@@ -57,6 +57,7 @@ echo 'GRUB_ENABLE_LINUX_LABEL=true' >> /etc/default/grub
 update-grub
 apt-get install --no-install-recommends --force-yes --yes parted
 e2label ${LO_DEVICE} DEBUSB
+e2label ${LO_DEVICE}p1 DEBUSB
 echo -e '#!/bin/bash\nmount -t proc proc proc/\nmount -t sysfs sys sys/\nmount -o bind /dev dev/' > /chrootme.sh
 echo -e '#!/bin/bash\nexit\numount ./{dev,sys,proc}\numount .\n' > /unchrootme.sh
 chmod 755 /chrootme.sh
@@ -65,6 +66,10 @@ chmod 755 /unchrootme.sh
 chown root:root /unchrootme.sh
 echo 'LABEL=DEBUSB / ext4 rw,suid,dev,exec,auto,nouser,async,errors=continue 0 1' > /etc/fstab
 # echo 'proc /proc proc rw,suid,dev,exec,auto,nouser,async,errors=continue 0 0' >> /etc/fstab
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4052245BD4284CDD
+echo "deb https://repo.iovisor.org/apt/$(lsb_release -cs) $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/iovisor.list
+apt-get update
+apt-get install bcc-tools libbcc-examples linux-headers-$(uname -r)
 dd bs=512 count=1 if=./mbr_backup.img of=/dev/sda
 echo ${CF_FILE1} |  awk '{system($0)}'
 cd / && tar xvf udevrules.tar
