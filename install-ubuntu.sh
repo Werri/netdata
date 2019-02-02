@@ -2,7 +2,7 @@
 apt-get update && apt-get install  nano --force-yes --yes
 apt-get update &&  apt-get install  rsync --force-yes --yes
 apt-get install debootstrap
-fallocate -l 1G debian.img
+fallocate -l 1500M debian.img
 echo -e "o\nn\np\n1\n\n\nw" |  fdisk debian.img
 echo -e "a\nw\n" |  fdisk debian.img
 LO_DEVICE=$( echo $(losetup --partscan --show --find debian.img))
